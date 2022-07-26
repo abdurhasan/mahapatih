@@ -40,26 +40,9 @@ export class MahapatihGuard {
       }
 
       /* eslint-disable camelcase */
-      const dor = await this.jwtService.verifyAsync(token);
-      console.log(dor)
+      request.user = await this.jwtService.verifyAsync(token);
 
-      /* eslint-enable camelcase */
 
-      // req.user = {
-      //   token,
-      //   fullName,
-      //   avatarUrl,
-      //   phoneNumber,
-      //   isActive,
-      //   positionLevel,
-      //   employeeId,
-      //   organizationId,
-      //   roleId,
-      //   unitId,
-      //   divisionId,
-      //   positionId,
-      //   ...userParam,
-      // };
 
       return true;
     } catch (err) {

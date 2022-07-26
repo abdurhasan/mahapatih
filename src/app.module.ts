@@ -6,15 +6,20 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { MahapatihGuard } from './guards';
 import { ConfigService } from './config/config.service';
+import { ProjectModule } from './modules/projects/project.module';
 
 @Module({
-  imports: [ConfigModule, DatabaseModule, UserModule,
+  imports: [
+    ProjectModule,
+    ConfigModule,
+    DatabaseModule,
+    UserModule,
     {
       ...JwtModule.registerAsync({
         imports: [ConfigModule],
         useFactory: async (configService: ConfigService) => ({
           secret: configService.JWT_SECRET_KEY,
-          signOptions: { expiresIn: '6h' },
+          signOptions: { expiresIn: '7d' },
         }),
         inject: [ConfigService],
       }),

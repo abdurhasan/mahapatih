@@ -23,7 +23,6 @@ export class User extends BaseEntity {
 
   @Column()
   validUntil: Date;
-
-  @Column({ nullable: true })
-  otp: number;
+  
+  
 }

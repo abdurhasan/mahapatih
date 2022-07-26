@@ -1,20 +1,23 @@
 import {
     Body,
     Controller,
-    HttpException,
+    Get,
     Inject,
+    Param,
     Post,
-
+    Query,
+    UseGuards,
 } from '@nestjs/common';
 import { UserRegisterInput } from './dto/user-register.input';
 import { UserService } from './user.service';
 import { response, responseError } from '../../helpers'
 import { ConfigService } from 'src/config/config.service';
 import { UserLoginInput } from './dto/user-login.input';
-import { Public } from 'src/guards';
+import { Public, RolesGuard } from 'src/guards';
 import { AddCustomerServiceInput } from './dto/add-customer-service.input';
-import { CurrentUser } from 'src/decorators';
+import { CurrentUser, Roles } from 'src/decorators';
 import { User } from 'src/entities';
+import { PaginationInput, RoleEnum } from 'src/types';
 
 @Controller('user')
 export class UserController {
@@ -54,31 +57,44 @@ export class UserController {
     }
 
     @Public()
-    @Post('voucher')
+    @Post('voucher/:days')
     async createVoucher(
-        @Body() param: { code: string, days: number },
+        @Param('days') days: number,
     ) {
         try {
             if (this.config.isProduction) {
                 throw new Error('not available')
             }
-            return await this.service.createVoucher(param)
+            return response({ result: await this.service.createVoucher(days) })
         } catch (e) {
             return responseError(e?.message);
         }
     }
 
-    
+
+    @UseGuards(RolesGuard)
+    @Roles(RoleEnum.Management)
     @Post('addCustomerService')
     async addCustomerService(
         @Body() param: AddCustomerServiceInput,
-        @CurrentUser() user : User
+        @CurrentUser() user: User
     ) {
         try {
-            if (this.config.isProduction) {
-                throw new Error('not available')
-            }
-            // return await this.service.createVoucher(param)
+            return response({ result: await this.service.addCS(param, user) })
+        } catch (e) {
+            return responseError(e?.message);
+        }
+    }
+
+    @UseGuards(RolesGuard)
+    @Roles(RoleEnum.Management)
+    @Get('getCustomerServices')
+    async getCustomerServices(
+        @Query() paginationParam: PaginationInput,
+        @CurrentUser() user: User,
+    ) {
+        try {
+            return response({ result: await this.service.getCustomerServices(paginationParam, user) });
         } catch (e) {
             return responseError(e?.message);
         }

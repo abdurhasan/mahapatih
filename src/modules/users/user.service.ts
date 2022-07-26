@@ -4,12 +4,13 @@ import { User, Voucher } from 'src/entities';
 import { Repository } from 'typeorm';
 import { UserRegisterInput } from './dto/user-register.input';
 import * as isEmpty from 'is-empty';
-import { RoleEnum, BaseResponse } from 'src/types';
+import { RoleEnum, BaseResponse, PaginationInput } from 'src/types';
 import * as moment from 'moment';
-import { phoneNumberFormatter } from 'src/helpers';
+import { createPaginationOptions, phoneNumberFormatter } from 'src/helpers';
 import { UserLoginInput } from './dto/user-login.input';
 import { JwtService } from '@nestjs/jwt';
 import { AddCustomerServiceInput } from './dto/add-customer-service.input';
+import * as generateVoucher from 'referral-codes';
 
 @Injectable()
 export class UserService {
@@ -76,19 +77,32 @@ export class UserService {
         }
     }
 
-    async createVoucher(param: { code: string; days: number }) {
-        await this.voucherRepo.save({
-            ...param,
-        });
-        return { success: true };
+    async createVoucher(days: number) {
+        try {
+            const code = generateVoucher.generate({
+                length: 4,
+                count: 4
+            });
+
+            await this.voucherRepo.save({
+                days,
+                code: code.join('-')
+            });
+            return { success: true }
+        } catch (error) {
+            throw error;
+        }
     }
 
-    async addCS(param: AddCustomerServiceInput, { organization, validUntil }: User) {
+    async addCS({ phone, ...param }: AddCustomerServiceInput, { organization, validUntil }: User) {
         try {
-
-
+            const user = await this.userRepo.findOne({ where: { phone } })
+            if (!isEmpty(user)) {
+                throw Error(`${phone} ald registered`)
+            }
             await this.userRepo.save({
                 ...param,
+                phone,
                 organization,
                 role: RoleEnum.User,
                 validUntil
@@ -100,4 +114,29 @@ export class UserService {
             throw error;
         }
     }
+
+    async getCustomerServices(paginationParam: PaginationInput, { organization }: User) {
+        try {
+            const { limit, offset, page } = createPaginationOptions(paginationParam);
+
+            const [data, total] = await this.userRepo.createQueryBuilder('user')
+                .where('user.organization = :organization', { organization })
+                .andWhere('user.role = :role', { role: RoleEnum.User })
+                .orderBy('user.name', 'ASC')
+                .limit(limit)
+                .offset(offset)
+                .getManyAndCount();
+
+            return {
+                data,
+                page,
+                limit,
+                total,
+                totalPage: Math.ceil(total / limit),
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }
