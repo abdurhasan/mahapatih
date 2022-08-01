@@ -31,6 +31,6 @@ import { ProjectModule } from './modules/projects/project.module';
       provide: APP_GUARD,
       useClass: MahapatihGuard,
     },
-  ]
+  ],
 })
-export class AppModule { }
+export class AppModule {}

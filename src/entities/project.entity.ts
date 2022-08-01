@@ -1,33 +1,35 @@
-import { ProjectStatusEnum } from "src/types";
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ProjectForm } from "./project-form.entity";
-import { User } from "./user.entity";
-
+import { ProjectStatusEnum } from 'src/types';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ProjectForm } from './projects-form.entity';
 
 @Entity('projects')
 export class Project extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column({ type: 'enum', enum: ProjectStatusEnum })
-    status: ProjectStatusEnum;
+  @Column({ type: 'enum', enum: ProjectStatusEnum })
+  status: ProjectStatusEnum;
 
-    @Column({ unique: true })
-    projectCode: string;
+  @Column({ unique: true })
+  projectCode: string;
 
-    @Column()
-    organization: string;
+  @Column()
+  organization: string;
 
-    @ManyToMany(() => User)
-    @JoinTable()
-    customerServices: User[]
+  @Column()
+  redirectText: string;
 
-    @OneToMany(() => ProjectForm, (projectForm) => projectForm.project)
-    forms: ProjectForm[];
+  @CreateDateColumn()
+  createdAt: Date;
 
-
-
+  forms?: ProjectForm[];
 }

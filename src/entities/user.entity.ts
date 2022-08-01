@@ -21,8 +21,9 @@ export class User extends BaseEntity {
   @Column({ type: 'enum', enum: RoleEnum })
   role: RoleEnum;
 
+  @Column({ type: 'boolean', default: false })
+  whatsappConnected?: boolean;
+
   @Column()
   validUntil: Date;
-  
-  
 }

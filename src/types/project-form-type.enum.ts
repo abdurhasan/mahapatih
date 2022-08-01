@@ -1,6 +1,11 @@
 export enum ProjectFormTypeEnum {
-    date = 'date',
-    string = 'string',
-    checklist = 'checklist',
-    checklistWhatsapp = 'checklistWhatsapp',
+  date = 'date',
+  character = 'character',
+  checklist = 'checklist',
+  checklistWhatsapp = 'checklistWhatsapp',
 }
+
+export const FormTypeBoolean: string[] = [
+  ProjectFormTypeEnum.checklistWhatsapp,
+  ProjectFormTypeEnum.checklist,
+];
