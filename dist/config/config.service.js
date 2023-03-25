@@ -29,7 +29,7 @@ class ConfigService {
             .get('DB_PASSWORD')
             .required()
             .asString();
-        this.WA_URL = this.env.get('WA_URL').required().asString();
+        this.WA_URL = 'https://api-staging.40apcca2022.sg/whatsapp/chats/send?id=dor';
         Object.freeze(this);
     }
 }
