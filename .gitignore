@@ -1,7 +1,7 @@
 # compiled output
-/dist
-/node_modules
 
+/node_modules
+/src
 # Logs
 logs
 *.log
@@ -38,3 +38,5 @@ yarn.lock
 package-lock.json
 yarn-error.log
 dump.rdb
+README.md
+Procfile
