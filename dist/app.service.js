@@ -45,23 +45,7 @@ let AppService = class AppService {
         const params = {
             receiver: phone,
             message: {
-                text: `
-                *Hallo , Selamat Malam ${name} .* 
-                *Perkenalkan saya admin dari skalascape.* 
-
-                *Skalascape sendiri adalah konsultan di bidang Arsitektur & Interior* 
-                *dari tahap A-Z mulai dari desain - perencanaan - perancangan hingga pembangunan :*
-                *✅Jasa Design & Build Interior Apartemen*
-                *✅Jasa Design & Build Interior Rumah*
-                *✅Jasa Design & Build Interior Kantor*
-
-                *✅Renovasi Rumah*
-                *✅Renovasi Taman*
-                *✅Renovasi Klinik*
-                *✅Makeover Kamar*
-
-                *Untuk informasi lebih detailnya.Barangkali Pak/Bu ${name} lebih nyaman saya telepon / chat ?*                
-                `
+                text: `*Hallo , Selamat Malam ${name} .*\n*Perkenalkan saya admin dari skalascape.*\n\n*Skalascape sendiri adalah konsultan di bidang Arsitektur & Interior*\n*dari tahap A-Z mulai dari desain - perencanaan - perancangan hingga pembangunan :*\n*✅Jasa Design & Build Interior Apartemen*\n*✅Jasa Design & Build Interior Rumah*\n*✅Jasa Design & Build Interior Kantor*\n\n*✅Renovasi Rumah*\n*✅Renovasi Taman*\n*✅Renovasi Klinik*\n*✅Makeover Kamar*\n*Untuk informasi lebih detailnya.Barangkali Pak/Bu ${name} lebih nyaman saya telepon / chat ?*`
             }
         };
         await axios_1.default.post(this.config.WA_URL, Object.assign({}, params));
